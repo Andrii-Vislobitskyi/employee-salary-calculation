@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS public.users(
+  Id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  ExternalID INT NOT NULL,
+  Phone VARCHAR(32) NOT NULL,
+  PasswordHash VARCHAR(255) NOT NULL,
+  FirstName VARCHAR(255) NOT NULL,
+  LastName VARCHAR(255) NOT NULL,
+  Patronymic VARCHAR(255) NOT NULL,
+  IsActive BOOLEAN NOT NULL,
+  CreatedAt timestamp without time zone DEFAULT now()  
+);

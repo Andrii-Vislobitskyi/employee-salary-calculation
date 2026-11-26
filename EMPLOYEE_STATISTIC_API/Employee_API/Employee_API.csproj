@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="StaticFiles\Create_table.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="StaticFiles\Create_table.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Libraries\EMP.Common\EMP.Common.csproj" />
+    <ProjectReference Include="..\Libraries\EMP.DataAccess\EMP.DataAccess.csproj" />
+    <ProjectReference Include="..\Libraries\EMP.Http\EMP.Http.csproj" />
+    <ProjectReference Include="..\Libraries\EMP.Services\EMP.Services.csproj" />
+  </ItemGroup>
+
+</Project>
