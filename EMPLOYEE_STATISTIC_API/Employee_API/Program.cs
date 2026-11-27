@@ -35,12 +35,16 @@ apiConfig.ConnectionString = connectionString;
 apiConfig.TokenExpires = builder.Configuration.GetValue<int>("TokenExpires");
 apiConfig.SecretKey = key;
 apiConfig.BonusRate = float.Parse(builder.Configuration.GetValue<string>("BonusRate"), CultureInfo.InvariantCulture);
-builder.Services.AddSingleton(apiConfig);
-
 
 builder.Services.AddServices();
+builder.Services.AddRepositories();
+builder.Services.AddSingleton(apiConfig);
 builder.Services.AddAuth(apiConfig);
 
+//Add log to console
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 var app = builder.Build();
 

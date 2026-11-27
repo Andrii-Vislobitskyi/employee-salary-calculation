@@ -17,18 +17,20 @@ namespace Employee_API.Controllers
         private readonly IStatisticService _serviceStatistic;
         private readonly IUserService _userService;
         private readonly JwtProvider _jwtProvider;
-        public StaticticSaleryController(IStatisticService serviceStatistic
-                                        , IUserService userService
-                                        , JwtProvider jwtProvider) 
+        private readonly ILogger<StaticticSaleryController> _logger;
+        public StaticticSaleryController(IStatisticService serviceStatistic, IUserService userService
+                                        , JwtProvider jwtProvider, ILogger<StaticticSaleryController> logger) 
         {
             _serviceStatistic = serviceStatistic;
             _userService = userService;
             _jwtProvider = jwtProvider;
+            _logger = logger;
         }
 
         #region CURREN DAY STATISTIC - REMOVE??
         [HttpGet("current-day")]
         [ActionName(nameof(GetClosedBills_Async))]
+        [Authorize]
         public async Task<ActionResult<StatisticByDayDto>> GetClosedBills_Async()
         {
             try
@@ -64,13 +66,13 @@ namespace Employee_API.Controllers
 
 
         [HttpPost("bonus-data")]
+        [Authorize]
         public async Task<ActionResult<ReportStatistic>> Get_StatisticByRange_Async([FromBody] CurrentDayClosedBillsDto? currentDay, StatisticRange statisticRange)
         {
             try
             {
                 if (statisticRange == StatisticRange.TODAY)
                     return RedirectToAction(nameof(GetClosedBills_Async));
-
 
                 (int, int, string) userData = _jwtProvider.GetClaimsUserData(HttpContext);
 
@@ -87,25 +89,19 @@ namespace Employee_API.Controllers
                 return Ok(statisticRangeDto);
             }        
             catch (Exception ex)
-            {             
+            {
+                _logger.LogError($"{nameof(StaticticSaleryController)} >> {nameof(Get_StatisticByRange_Async)} :: Message: {ex.Message}\n{ex.StackTrace}\n");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
         }
 
-
-
-
-
         [HttpPost("discount-details")]
+        [Authorize]
         public async Task<ActionResult<DiscountReportDto>> Get_DiscountDetails_Async([FromBody] CurrentDayClosedBillsDto? currentDay, StatisticRange statisticRange)
         {
             try
             {
-
-                var claim = HttpContext.User.Claims.FirstOrDefault();
-
-
                 (int, int, string) userData = _jwtProvider.GetClaimsUserData(HttpContext);
 
                 StatisticRequestFilter filter = new StatisticRequestFilter();
@@ -116,13 +112,13 @@ namespace Employee_API.Controllers
                 filter.CurrentDayFilter = currentDay;
                 filter.UserFullName = await _userService.GetFullName_Async(userData.Item2);
 
-
                 DiscountReportDto discountReport = await _serviceStatistic.GetRangeDate_StaffDiscountReport_Async(filter);
 
                 return Ok(discountReport);
             }
             catch(Exception ex)
             {
+                _logger.LogError($"{nameof(StaticticSaleryController)} >> {nameof(Get_DiscountDetails_Async)} :: Message: {ex.Message}\n{ex.StackTrace}\n");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
            

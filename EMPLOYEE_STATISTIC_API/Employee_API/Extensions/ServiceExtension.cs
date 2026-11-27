@@ -14,19 +14,23 @@ namespace Employee_API.Extensions
     {
         public static IServiceCollection AddServices(this IServiceCollection services) {
 
-            services.AddTransient<DateRangeCalculator>();
-            services.AddTransient<StatistcActionStorage>();
-            services.AddTransient<IMathStatistic, MathService>();
-            services.AddTransient<IStatisticService, StatisticService>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IHashService, HashService>();
+            services.AddScoped<DateRangeCalculator>();
+            services.AddScoped<StatistcActionStorage>();
+            services.AddScoped<IMathStatistic, MathService>();
+            services.AddScoped<IStatisticService, StatisticService>();           
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHashService, HashService>();
 
             services.AddScoped<IManagerAPIService, ManagerAPIService>();
 
             services.AddScoped<JwtProvider>();
 
+            return services;
+        }
 
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
     }

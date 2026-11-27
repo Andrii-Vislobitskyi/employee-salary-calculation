@@ -8,7 +8,7 @@ namespace EMP.DataAccess.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string _connectionString;
+        private readonly string? _connectionString;
         public UserRepository(EmployeeAPIConfig config) 
         {
             _connectionString = config.ConnectionString;

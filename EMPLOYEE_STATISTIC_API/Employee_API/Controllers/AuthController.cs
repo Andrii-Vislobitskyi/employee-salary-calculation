@@ -11,9 +11,11 @@ namespace Employee_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
-        public AuthController(IUserService userService)
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(IUserService userService, ILogger<AuthController> logger)
         { 
-           _userService = userService;
+            _userService = userService;
+            _logger= logger;
         }
 
         [HttpPost("login")]
@@ -32,10 +34,12 @@ namespace Employee_API.Controllers
             }
             catch(CustomResponseException ex)
             {
+                _logger.LogError($"{nameof(AuthController)} >> {nameof(LoginAsync)} :: Message: {ex.Message}\n{ex.StackTrace}\n");
                 return StatusCode((int)ex.GetStatus(), ex.GetReason());
             }
             catch (Exception ex)
             {
+                _logger.LogError($"{nameof(AuthController)} >> {nameof(LoginAsync)} :: Message: {ex.Message}\n{ex.StackTrace}\n");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -56,10 +60,12 @@ namespace Employee_API.Controllers
             }
             catch(CustomResponseException ex)
             {
+                _logger.LogError($"{nameof(AuthController)} >> {nameof(RegisterAsync)} :: Message: {ex.Message}\n{ex.StackTrace}\n");
                 return StatusCode((int)ex.GetStatus(), ex.GetReason());
             }
             catch (Exception ex)
             {
+                _logger.LogError($"{nameof(AuthController)} >> {nameof(RegisterAsync)} :: Message: {ex.Message}\n{ex.StackTrace}\n");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
